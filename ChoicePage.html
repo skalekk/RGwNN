@@ -7,7 +7,68 @@
     <title>RGwNN</title>
 </head>
 <script>
+    $(function(){
+        const Difficulty = ["Drums", "Guitar", "Bass", "Vocals"];
+        const song = ["Hadal Abyss Zone", "YARARARA", "Failure Girl (Inabakumori Remix)", "My Lovely Nook"];
+        var choice = 0
+        $("#Difficulty").attr("value", Difficulty[choice])
+        $("#previousDiff").click(function(){
+            if(choice > 0){
+                choice--
+            }
+            $("#Difficulty").attr("value", Difficulty[choice])
+            console.log(choice)
+        })
+        $("#nextDiff").click(function(){  
+            if(choice < 3){
+                choice++
+            }
+            $("#Difficulty").attr("value", Difficulty[choice])
+            console.log(choice)
+        })
+        $("#song").attr("value", song[choice])
+        $("#previousSong").click(function(){
+            if(choice > 0){
+                choice--
+            }
+            $("#song").attr("value", song[choice])
+            console.log(choice)
+        })
+        $("#nextSong").click(function(){  
+            if(choice < 3){
+                choice++
+            }
+            $("#song").attr("value", song[choice])
+            console.log(choice)
+        })
+        $("form").submit(function(e){
+            e.preventDefault()
+        })
+        $("#Play").click(function(){
+            localStorage.setItem("diff", $("#Difficulty").val());
+            localStorage.setItem("song", $("#song").val());
+            console.log("Saved:", localStorage.getItem("diff"));
+            console.log("Saved:", localStorage.getItem("song"));
+            location.href = "PlayPage.html";
+        });
+    })
+    
 </script>
 <body>
+<div>
+    <form id="DifficultyChoice">
+        <button type="button" id="previousDiff">previous</button>
+        <input type="text" id="Difficulty" disabled>
+        <button type="button" id="nextDiff">next</button>
+    </form>
+    <form id="SongChoice">
+        <button type="button" id="previousSong">previous</button>
+        <input type="text" id="song" disabled>
+        <button type="button" id="nextSong">next</button>
+    </form>
+</div>
+    <button id="Play">Play</button>
+    <button id="return" onclick="location.href='WIPPage.html'">Settings</button>
+    <button id="return" onclick="location.href='StartPage.html'">Back</button>
 </body>
 </html>
