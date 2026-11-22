@@ -8,8 +8,47 @@
 </head>
 <body>
     <script>
-    </script>
+    window.onload = function(){
+        console.log("Retrieved:", localStorage.getItem("diff"));
+        console.log("Retrieved:", localStorage.getItem("song"));
+        // alert(localStorage.getItem("diff"));
+        // alert(localStorage.getItem("song"));
+    };
+    $(function(){
+        $(document).on("keydown", function(event){
+            if(event.key == "d"){
+                $("#b1").css("background-color", "red")
+            }else if(event.key == "f"){
+                $("#b2").css("background-color", "red")
+            }else if(event.key == "j"){
+                $("#b3").css("background-color", "red")
+            }else if(event.key == "k"){
+                $("#b4").css("background-color", "red")
+            }
+        })
+        $(document).on("keyup", function(event){
+            if(event.key == "d"){
+                $("#b1").css("background-color", "blue")
+            }else if(event.key == "f"){
+                $("#b2").css("background-color", "blue")
+            }else if(event.key == "j"){
+                $("#b3").css("background-color", "blue")
+            }else if(event.key == "k"){
+                $("#b4").css("background-color", "blue")
+            }
+        })
+    })
+</script>
 <style>
+    .noteInput{
+        background-color: blue;
+    }
 </style>
+<div id="playArea">
+    <div id="b1" class="noteInput">d</div>
+    <div id="b2" class="noteInput">f</div>
+    <div id="b3" class="noteInput">j</div>
+    <div id="b4" class="noteInput">k</div>
+</div>
 </body>
 </html>
