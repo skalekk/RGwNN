@@ -7,6 +7,40 @@
 </head>
 <body>
 <style>
-</style> 
+    .container{
+        display: grid;
+          grid-template-areas:
+            "BackGround1 Building BackGround2"
+            "BackGround1 Building BackGround2"
+            "BackGround1 Building BackGround2";
+          grid-template-columns: 20% 30% 50%;
+    }
+    .BackGround1{
+        background-color: red;
+        height: 100%;
+        width: auto;
+    }
+    .BackGround2{
+        background-color: green;
+        height: 100%;
+        width: auto;
+    }
+    .Building{
+        background-color: aqua;
+        height: 100%;
+        width: auto;
+    }
+</style>
+<div class="container"> 
+    <div class="BackGround1">
+        <img alt="bg1">
+    </div>
+    <div class="Building">
+        <button onclick="location.href='ChoicePage.html'">Play</button>
+    </div>
+    <div class="BackGround2">
+        <img alt="bg2">
+    </div>
+</div>   
 </body>
 </html>
