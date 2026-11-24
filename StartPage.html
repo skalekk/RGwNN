@@ -3,44 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
     <title>RGwNN</title>
 </head>
 <body>
 <style>
-    .container{
-        display: grid;
-          grid-template-areas:
-            "BackGround1 Building BackGround2"
-            "BackGround1 Building BackGround2"
-            "BackGround1 Building BackGround2";
-          grid-template-columns: 20% 30% 50%;
-    }
-    .BackGround1{
-        background-color: red;
-        height: 100%;
-        width: auto;
-    }
-    .BackGround2{
-        background-color: green;
-        height: 100%;
-        width: auto;
-    }
-    .Building{
-        background-color: aqua;
-        height: 100%;
-        width: auto;
-    }
+.row{
+  height: 100vh;
+}
+#buttonPos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    transform: translateX(-50px);
+}
 </style>
-<div class="container"> 
-    <div class="BackGround1">
-        <img alt="bg1">
+<div class="container-fluid"> 
+    <div class="row height-100">
+        <div class="col-2 bg-primary">
+            <img alt="bg1">
+        </div>
+        <div id="buttonPos" class="col-4">
+            <button id="playButton" onclick="location.href='ChoicePage.html'">PLAY</button>
+        </div>
+        <div class="col-6 bg-primary">
+            <img alt="bg2">
+        </div>
     </div>
-    <div class="Building">
-        <button onclick="location.href='ChoicePage.html'">Play</button>
-    </div>
-    <div class="BackGround2">
-        <img alt="bg2">
-    </div>
-</div>   
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>   
 </body>
 </html>
