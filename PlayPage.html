@@ -4,51 +4,284 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
     <title>RGwNN</title>
 </head>
 <body>
     <script>
-    window.onload = function(){
-        console.log("Retrieved:", localStorage.getItem("diff"));
-        console.log("Retrieved:", localStorage.getItem("song"));
-        // alert(localStorage.getItem("diff"));
-        // alert(localStorage.getItem("song"));
-    };
-    $(function(){
-        $(document).on("keydown", function(event){
-            if(event.key == "d"){
-                $("#b1").css("background-color", "red")
-            }else if(event.key == "f"){
-                $("#b2").css("background-color", "red")
-            }else if(event.key == "j"){
-                $("#b3").css("background-color", "red")
-            }else if(event.key == "k"){
-                $("#b4").css("background-color", "red")
+    let rank //string sets what rank got achived
+    let score //int ..its a score dumbahh
+    const lanes = {
+        L: {
+            key: "d",
+            pressed: false,
+            hit: false,
+            note: ".noteL",
+            image: "#keyL",
+            color: "#e86a73",
+            position: 0
+        },
+        ML: {
+            key: "f",
+            pressed: false,
+            hit: false,
+            note: ".noteML",
+            image: "#keyML",
+            color: "#bc4a9b",
+            position: 0
+        },
+        MR: {
+            key: "j",
+            pressed: false,
+            hit: false,
+            note: ".noteMR",
+            image: "#keyMR",
+            color: "#23674e",
+            position: 0
+        },
+        R: {
+            key: "k",
+            pressed: false,
+            hit: false,
+            note: ".noteR",
+            image: "#keyR",
+            color: "#b9bffb",
+            position: 0
+        }
+    }
+        let hitL
+    let hitML
+    let hitMR
+    let hitR
+    let rythm //how fast is note going modifier
+    let combo
+    let missCount
+    let notPaused
+    function hitCheck(lane){
+            //770px position where the note overlaps on the "perfect"
+            if (!lane || !lane.note) return
+
+            let position = lane.position // Current note position
+            let target = 770
+
+            let difference = position - target
+            let distance = Math.abs(difference)
+            
+            let timing = difference < 0 ? "early" : "late";
+
+            if (distance <= 10) {
+                score += 100
+                combo++
+                lane.hit = true
+                return "Perfect";
+            } else if (distance <= 30) {
+                score += 50
+                combo++
+                lane.hit = true
+                return "Good";
+            } else if (distance <= 60) {
+                score += 25
+                combo++
+                lane.hit = true
+                return "Bad";
+            } else {
+                lane.hit = false
+                combo = 0
+                missCount++
+                return "Miss";
             }
+                        
+        }
+function noteMove(lane) {
+    let howLow = 0
+    let lastTime = 0
+    function moveNote(timestamp) {
+
+        if (!notPaused) {
+            lastTime = 0
+            requestAnimationFrame(moveNote)
+            return
+        }
+
+        if (lastTime === 0) lastTime = timestamp
+
+        let deltaTime = (timestamp - lastTime) / 1000
+        lastTime = timestamp
+
+        howLow += rythm * deltaTime
+        lane.position = howLow
+
+        $(lane.note).css("transform", `translateY(${howLow}px)`)
+
+
+        if (lane.hit) {
+            howLow = 0;
+            lane.position = 0;
+            lane.hit = false;
+
+            $(lane.note).css({
+                "transform": "translateY(0px)",
+                "background-color": lane.color
+            });
+        }
+        // Note reaches the bottom
+        if (howLow >= 786 && !lane.hit) {
+
+            howLow = 0
+
+            $(lane.note).css({
+                "transform": "translateY(0px)",
+                "background-color": lane.color
+            })
+        }
+
+        requestAnimationFrame(moveNote)
+    }
+
+    requestAnimationFrame(moveNote)
+}
+    function rankMessage(rank){
+        switch(rank) {
+            case 1:
+                console.log("perfect")
+            case 2:
+                console.log("good")
+            case 3:
+                console.log("bad")
+            case 0:
+                console.log("miss")
+            default:
+                console.log("error: unknown rank")
+            } 
+    }
+    window.onload = function(){
+        console.log("Retrieved:", localStorage.getItem("diff"))
+        console.log("Retrieved:", localStorage.getItem("song"))
+    }
+    $(function(){
+        notPaused = true
+        rythm = 300
+        combo = 0
+        missCount = 0
+        noteMove(lanes.L)
+        // noteMove(lanes.ML)
+        // noteMove(lanes.MR)
+        // noteMove(lanes.R)
+        $(document).on("keydown", function(event){
+
+            for (const lane of Object.values(lanes)) {
+
+                if (event.key === lane.key && !lane.pressed) {
+
+                    lane.pressed = true
+
+
+                    hitCheck(lane)
+
+                    $(lane.image).attr(
+                        "src",
+                        "assets/exported/KeyPressed.png"
+                    )
+
+                    console.log(lane.key + " pressed")
+                }
+            }
+
         })
         $(document).on("keyup", function(event){
-            if(event.key == "d"){
-                $("#b1").css("background-color", "blue")
-            }else if(event.key == "f"){
-                $("#b2").css("background-color", "blue")
-            }else if(event.key == "j"){
-                $("#b3").css("background-color", "blue")
-            }else if(event.key == "k"){
-                $("#b4").css("background-color", "blue")
+
+            for (const lane of Object.values(lanes)) {
+
+                if (event.key === lane.key) {
+
+                    lane.pressed = false
+
+                    $(lane.image).attr(
+                        "src",
+                        "assets/exported/KeyUnpressed.png"
+                    )
+
+                    console.log(lane.key + " released")
+                }
             }
+
         })
+        // $(document).on("focusout" , function(){
+        //     notPaused = false
+        // })
+        
     })
 </script>
 <style>
-    .noteInput{
-        background-color: blue;
+    .noteL{
+        background-color: #e86a73;
+        width: 50px;
+        height: 10px;
+        transform: translateY(1px);
+    }
+    .noteML{
+        background-color: #bc4a9b;
+        width: 50px;
+        height: 10px;
+        transform: translateY(0px);
+    } 
+    .noteMR{
+        background-color: #23674e;
+        width: 50px;
+        height: 10px;
+        transform: translateY(0px);
+    }
+    .noteR{
+        background-color: #b9bffb;
+        width: 50px;
+        height: 10px;
+        transform: translateY(0px);
+    }
+    .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    }
+    #noteArea{
+        height: 75vh;
+        padding: 10px;
     }
 </style>
-<div id="playArea">
-    <div id="b1" class="noteInput">d</div>
-    <div id="b2" class="noteInput">f</div>
-    <div id="b3" class="noteInput">j</div>
-    <div id="b4" class="noteInput">k</div>
+<div id="noteArea" class="container">
+    <div class="row w-25 h-75">
+        <div id="spawnL" class="col-3 center">
+            <div class="noteL"></div>
+        </div>
+        <div id="spawnML" class="col-3 center">
+            <div class="noteML"></div>
+        </div>
+        <div id="spawnMR" class="col-3 center">
+            <div class="noteMR"></div>
+        </div>
+        <div id="spawnR" class="col-3 center">
+            <div class="noteR"></div>
+        </div>
+    </div>
+    <div class="row w-25 h-25">
+        <div class="col-3 center keyL">
+            <img id="keyL" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+            <p id="keyLInfo">ㅤ</p>
+        </div> 
+        <div id="b2" class="col-3 center keyML">
+            <img id="keyML" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+            <p id="keyMLInfo">ㅤ</p>
+        </div> 
+        <div id="b3" class="col-3 center keyMR">
+            <img id="keyMR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+            <p id="keyMRInfo">ㅤ</p>
+        </div>
+        <div id="b4" class="col-3 center keyR">
+            <img id="keyR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+            <p id="keyRInfo">ㅤ</p>
+        </div>
+    </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
 </body>
 </html>
