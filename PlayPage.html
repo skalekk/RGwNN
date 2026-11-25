@@ -9,7 +9,6 @@
 </head>
 <body>
     <script>
-    
     const lanes = {
         L: {
             key: "d",
@@ -51,7 +50,7 @@
     let rythm //how fast is note going modifier
     let combo
     let missCount
-    let score //int ..its a score dumbahh
+    let score = 0
     let notPaused
     function hitCheck(lane){
             //58.9vh position where the note overlaps on the "perfect"
@@ -84,7 +83,6 @@ function noteMove(lane) {
     let howLow = 0
     let lastTime = 0
     function moveNote(timestamp) {
-
         if (!notPaused) {
             lastTime = 0
             requestAnimationFrame(moveNote)
@@ -100,7 +98,6 @@ function noteMove(lane) {
         lane.position = howLow
 
         $(lane.note).css("transform", `translateY(${howLow}vh)`)
-
 
         if (lane.hit) {
             howLow = 0;
@@ -135,21 +132,29 @@ function noteMove(lane) {
                 score += 100
                 combo++
                 console.log("perfect")
+                $("#scoreInfo").text("score: " + score)
+                $("#rankInfo").text("perfect")
                 break
             case 2:
                 score += 50
                 combo++
                 console.log("good")
+                $("#scoreInfo").text("score: " + score)
+                $("#rankInfo").text("good")
                 break
             case 3:
                 score += 25
                 combo++
                 console.log("bad")
+                $("#scoreInfo").text("score: " + score)
+                $("#rankInfo").text("bad")
                 break
             default:
                 combo = 0
                 missCount++
                 console.log("miss")
+                $("#missInfo").text("misses: " + missCount)
+                $("#rankInfo").text("miss")
                 break
             } 
     }
@@ -166,8 +171,6 @@ function noteMove(lane) {
         noteMove(lanes.ML)
         noteMove(lanes.MR)
         noteMove(lanes.R)
-        $("#scoreInfo").text(score)
-        $("#missInfo").text(missCount)
         $(document).on("keydown", function(event){
 
             for (const lane of Object.values(lanes)) {
@@ -216,6 +219,10 @@ function noteMove(lane) {
     })
 </script>
 <style>
+    html, body {
+        height: 100%;
+        width: 100%;
+    }
     .noteL{
         background-color: #e86a73;
         width: 50px;
@@ -246,50 +253,83 @@ function noteMove(lane) {
     justify-content: flex-start;
     align-items: center;
     }
+    .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: end;
+    }
+    .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: start;
+    }
     #noteArea{
         height: 75vh;
         padding: 10px;
     }
+    .visual{
+        background-color: #23674e;
+        height: 100%;
+        width: 100%;
+    }
+    .main{
+        padding: 1vh;
+        background-color: gray;
+        height: 100%;
+    }
 </style>
-<div id="noteArea" class="container">
-    <div class="row w-25 h-75">
-        <div id="spawnL" class="col-3 center">
-            <div class="noteL"></div>
+<div class="container-fluid main center">
+    <div class="row w-50">
+        <div class="container col-6" id="visualArea">
+                
+            <div class="col-12 h-100 bg-primary">a</div>
         </div>
-        <div id="spawnML" class="col-3 center">
-            <div class="noteML"></div>
+        <div id="noteArea" class="container col-6 right">
+            <div class="row w-50 h-75">
+                <div id="spawnL" class="col-3 center">
+                    <div class="noteL"></div>
+                </div>
+                <div id="spawnML" class="col-3 center">
+                    <div class="noteML"></div>
+                </div>
+                <div id="spawnMR" class="col-3 center">
+                    <div class="noteMR"></div>
+                </div>
+                <div id="spawnR" class="col-3 center">
+                    <div class="noteR"></div>
+                </div>
+            </div>
+            <div class="row w-50 h-25">
+                <div class="col-3 center keyL">
+                    <img id="keyL" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+                    <p id="keyLInfo">ㅤ</p>
+                </div> 
+                <div id="b2" class="col-3 center keyML">
+                    <img id="keyML" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+                    <p id="keyMLInfo">ㅤ</p>
+                </div> 
+                <div id="b3" class="col-3 center keyMR">
+                    <img id="keyMR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+                    <p id="keyMRInfo">ㅤ</p>
+                </div>
+                <div id="b4" class="col-3 center keyR">
+                    <img id="keyR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
+                    <p id="keyRInfo">ㅤ</p>
+                </div>
+                <div class="col-3 center">
+                    <p id="scoreInfo">score: ㅤ</p>
+                </div>
+                <div class="col-3 center">
+                    <p id="missInfo">misses: ㅤ</p>
+                </div>
+                <div class="col-3 center">
+                    <p id="rankInfo">ㅤ</p>
+                </div>
+                
+            </div>
         </div>
-        <div id="spawnMR" class="col-3 center">
-            <div class="noteMR"></div>
-        </div>
-        <div id="spawnR" class="col-3 center">
-            <div class="noteR"></div>
-        </div>
-    </div>
-    <div class="row w-25 h-25">
-        <div class="col-3 center keyL">
-            <img id="keyL" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-            <p id="keyLInfo">ㅤ</p>
-        </div> 
-        <div id="b2" class="col-3 center keyML">
-            <img id="keyML" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-            <p id="keyMLInfo">ㅤ</p>
-        </div> 
-        <div id="b3" class="col-3 center keyMR">
-            <img id="keyMR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-            <p id="keyMRInfo">ㅤ</p>
-        </div>
-        <div id="b4" class="col-3 center keyR">
-            <img id="keyR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-            <p id="keyRInfo">ㅤ</p>
-        </div>
-        <div class="col-3 center">
-            <p id="scoreInfo">ㅤ</p>
-        </div>
-        <div class="col-3 center">
-            <p id="missInfo">ㅤ</p>
-        </div>
-        
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
