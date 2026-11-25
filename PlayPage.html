@@ -9,8 +9,7 @@
 </head>
 <body>
     <script>
-    let rank //string sets what rank got achived
-    let score //int ..its a score dumbahh
+    
     const lanes = {
         L: {
             key: "d",
@@ -49,46 +48,35 @@
             position: 0
         }
     }
-        let hitL
-    let hitML
-    let hitMR
-    let hitR
     let rythm //how fast is note going modifier
     let combo
     let missCount
+    let score //int ..its a score dumbahh
     let notPaused
     function hitCheck(lane){
-            //770px position where the note overlaps on the "perfect"
+            //58.9vh position where the note overlaps on the "perfect"
             if (!lane || !lane.note) return
 
             let position = lane.position // Current note position
-            let target = 770
+            let target = 58.9
 
             let difference = position - target
             let distance = Math.abs(difference)
             
             let timing = difference < 0 ? "early" : "late";
 
-            if (distance <= 10) {
-                score += 100
-                combo++
+            if (distance <= 1) {
                 lane.hit = true
-                return "Perfect";
-            } else if (distance <= 30) {
-                score += 50
-                combo++
+                rankMessage(1)
+            } else if (distance <= 2) {
                 lane.hit = true
-                return "Good";
-            } else if (distance <= 60) {
-                score += 25
-                combo++
+                rankMessage(2)
+            } else if (distance <= 3) {
                 lane.hit = true
-                return "Bad";
+                rankMessage(3)
             } else {
                 lane.hit = false
-                combo = 0
-                missCount++
-                return "Miss";
+                rankMessage()
             }
                         
         }
@@ -111,7 +99,7 @@ function noteMove(lane) {
         howLow += rythm * deltaTime
         lane.position = howLow
 
-        $(lane.note).css("transform", `translateY(${howLow}px)`)
+        $(lane.note).css("transform", `translateY(${howLow}vh)`)
 
 
         if (lane.hit) {
@@ -125,7 +113,7 @@ function noteMove(lane) {
             });
         }
         // Note reaches the bottom
-        if (howLow >= 786 && !lane.hit) {
+        if (howLow >= 60.8 && !lane.hit) {
 
             howLow = 0
 
@@ -133,6 +121,7 @@ function noteMove(lane) {
                 "transform": "translateY(0px)",
                 "background-color": lane.color
             })
+            rankMessage()
         }
 
         requestAnimationFrame(moveNote)
@@ -143,15 +132,25 @@ function noteMove(lane) {
     function rankMessage(rank){
         switch(rank) {
             case 1:
+                score += 100
+                combo++
                 console.log("perfect")
+                break
             case 2:
+                score += 50
+                combo++
                 console.log("good")
+                break
             case 3:
+                score += 25
+                combo++
                 console.log("bad")
-            case 0:
-                console.log("miss")
+                break
             default:
-                console.log("error: unknown rank")
+                combo = 0
+                missCount++
+                console.log("miss")
+                break
             } 
     }
     window.onload = function(){
@@ -160,13 +159,15 @@ function noteMove(lane) {
     }
     $(function(){
         notPaused = true
-        rythm = 300
-        combo = 0
+        rythm = 50
+        combo
         missCount = 0
         noteMove(lanes.L)
-        // noteMove(lanes.ML)
-        // noteMove(lanes.MR)
-        // noteMove(lanes.R)
+        noteMove(lanes.ML)
+        noteMove(lanes.MR)
+        noteMove(lanes.R)
+        $("#scoreInfo").text(score)
+        $("#missInfo").text(missCount)
         $(document).on("keydown", function(event){
 
             for (const lane of Object.values(lanes)) {
@@ -177,6 +178,8 @@ function noteMove(lane) {
 
 
                     hitCheck(lane)
+
+                    console.log(hitCheck(lane))
 
                     $(lane.image).attr(
                         "src",
@@ -217,25 +220,25 @@ function noteMove(lane) {
         background-color: #e86a73;
         width: 50px;
         height: 10px;
-        transform: translateY(1px);
+        transform: translateY(1vh);
     }
     .noteML{
         background-color: #bc4a9b;
         width: 50px;
         height: 10px;
-        transform: translateY(0px);
+        transform: translateY(1vh);
     } 
     .noteMR{
         background-color: #23674e;
         width: 50px;
         height: 10px;
-        transform: translateY(0px);
+        transform: translateY(1vh);
     }
     .noteR{
         background-color: #b9bffb;
         width: 50px;
         height: 10px;
-        transform: translateY(0px);
+        transform: translateY(1vh);
     }
     .center {
     display: flex;
@@ -280,6 +283,13 @@ function noteMove(lane) {
             <img id="keyR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
             <p id="keyRInfo">ㅤ</p>
         </div>
+        <div class="col-3 center">
+            <p id="scoreInfo">ㅤ</p>
+        </div>
+        <div class="col-3 center">
+            <p id="missInfo">ㅤ</p>
+        </div>
+        
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
