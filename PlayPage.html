@@ -55,185 +55,214 @@
     let missCount
     let score = 0
     let notPaused
-    let chart;
-    let nextNote = 0;
-    let songStart;
+    let chart
+    let nextNote = 0
+    let songStart
     let path = "songs/1/chartV.json"
+    let chartFinished = false
+    let activeNotes = []
 
-    async function loadChart() {
-        const response = await fetch("songs\\1\\chartV.json");
-        chart = await response.json();
+        async function loadChart() {
+            const response = await fetch("songs\\1\\chartV.json")
+            chart = await response.json()
 
-        songStart = performance.now();
-        requestAnimationFrame(chartUpdate);
-    }
+            songStart = performance.now()
+            requestAnimationFrame(chartUpdate)
+        }
 
-    function chartUpdate(timestamp) {
-            let elapsed = timestamp - songStart;
+        function chartUpdate(timestamp) {
+            let elapsed = timestamp - songStart
+            let travelTime = (58.9 / rythm) * 1000
 
             while (
                 nextNote < chart.notes.length &&
-                chart.notes[nextNote].time <= elapsed
+                chart.notes[nextNote].time - travelTime <= elapsed
             ) {
-                spawnNote(chart.notes[nextNote].lane);
-                nextNote++;
+                spawnNote(chart.notes[nextNote].lane)
+                nextNote++
             }
 
-            requestAnimationFrame(chartUpdate);
+            if (nextNote >= chart.notes.length) {
+                chartFinished = true
+                checkGameFinished()
+                return
+            }
+
+            requestAnimationFrame(chartUpdate)
         }
-
         function spawnNote(laneName) {
-        const note = document.createElement("div");
+            const element = document.createElement("div")
+            element.classList.add("note" + laneName)
 
-        note.classList.add("note" + laneName);
+            document
+                .querySelector("#spawn" + laneName)
+                .appendChild(element)
 
-        document
-            .querySelector("#spawn" + laneName)
-            .appendChild(note);
-    }
+            const note = {
+                element: element,
+                laneName: laneName,
+                position: 0,
+                hit: false
+            }
 
-    function hitCheck(lane){
-            //58.9vh position where the note overlaps on the "perfect"
-            if (!lane || !lane.note) return
+            activeNotes.push(note)
 
-            let position = lane.position // Current note position
+            noteMove(note)
+        }
+        function hitCheck(laneName) {
+
             let target = 58.9
 
-            let difference = position - target
+            let laneNotes = activeNotes.filter(note =>
+                note.laneName === laneName && !note.hit
+            )
+
+            if (laneNotes.length === 0) return
+
+            let closestNote = laneNotes.reduce((closest, note) => {
+                return Math.abs(note.position - target) <
+                    Math.abs(closest.position - target)
+                    ? note : closest
+            })
+
+            let difference = closestNote.position - target
             let distance = Math.abs(difference)
-            
-            let timing = difference < 0 ? "early" : "late";
 
             if (distance <= 1) {
-                lane.hit = true
+                closestNote.hit = true
                 rankMessage(1)
             } else if (distance <= 2) {
-                lane.hit = true
+                closestNote.hit = true
                 rankMessage(2)
             } else if (distance <= 3) {
-                lane.hit = true
+                closestNote.hit = true
                 rankMessage(3)
-            } else {
-                lane.hit = false
-                rankMessage()
             }
-                        
         }
-function noteMove(lane) {
-    let howLow = 0
-    let lastTime = 0
-    function moveNote(timestamp) {
-        if (!notPaused) {
-            lastTime = 0
-            requestAnimationFrame(moveNote)
-            return
-        }
+        function noteMove(note) {
+            let lastTime = 0
 
-        if (lastTime === 0) lastTime = timestamp
+            let lane = lanes[note.laneName]
 
-        let deltaTime = (timestamp - lastTime) / 1000
-        lastTime = timestamp
+            function moveNote(timestamp) {
 
-        howLow += rythm * deltaTime
-        lane.position = howLow
-
-        $(lane.note).css("transform", `translateY(${howLow}vh)`)
-
-        if (lane.hit) {
-            howLow = 0;
-            lane.position = 0;
-            lane.hit = false;
-
-            $(lane.note).css({
-                "transform": "translateY(0px)",
-                "background-color": lane.color
-            });
-        }
-        // Note reaches the bottom
-        if (howLow >= 60.8 && !lane.hit) {
-
-            howLow = 0
-
-            $(lane.note).css({
-                "transform": "translateY(0px)",
-                "background-color": lane.color
-            })
-            rankMessage()
-        }
-
-        requestAnimationFrame(moveNote)
-    }
-
-    requestAnimationFrame(moveNote)
-}
-    function rankMessage(rank){
-        let hitSound = document.getElementById("hitSound");
-        let hitSoundP = document.getElementById("hitSound");
-        switch(rank) {
-            case 1:
-                score += 100
-                combo++
-                console.log("perfect")
-                $("#scoreInfo").text("Score: " + score)
-                $("#rankInfo").text("Clean")
-                hitSoundP.currentTime = 0;
-                hitSoundP.play();
-                break
-            case 2:
-                score += 50
-                combo++
-                console.log("good")
-                $("#scoreInfo").text("Score: " + score)
-                $("#rankInfo").text("Alright")
-                hitSound.currentTime = 0;
-                hitSound.play();
-                break
-            case 3:
-                score += 25
-                combo++
-                console.log("bad")
-                $("#scoreInfo").text("Score: " + score)
-                $("#rankInfo").text("Sluggish")
-                hitSound.currentTime = 0;
-                hitSound.play();
-                break
-            default:
-                combo = 0
-                missCount++
-                if(score != 0){
-                    score -= 10
-                    $("#scoreInfo").text("Score: " + score)
+                if (!notPaused) {
+                    lastTime = 0
+                    requestAnimationFrame(moveNote)
+                    return
                 }
-                console.log("miss")
-                $("#missInfo").text("Misses: " + missCount)
-                $("#rankInfo").text("Miss")
-                break
-            } 
-    }
-    window.onload = function(){
-        console.log("Retrieved:", localStorage.getItem("diff"))
-        console.log("Retrieved:", localStorage.getItem("song"))
-    }
+
+                if (lastTime === 0) lastTime = timestamp
+
+                let deltaTime = (timestamp - lastTime) / 1000
+                lastTime = timestamp
+
+                note.position += rythm * deltaTime
+
+                $(note.element).css(
+                    "transform",
+                    `translateY(${note.position}vh)`
+                )
+
+                // Note was hit
+                if (note.hit) {
+                    removeNote(note)
+                    return
+                }
+
+                // Note was missed
+                if (note.position >= 60.8) {
+                    rankMessage()
+                    removeNote(note)
+                    return
+                }
+
+                requestAnimationFrame(moveNote)
+            }
+
+            requestAnimationFrame(moveNote)
+        }
+        function removeNote(note) {
+            note.element.remove()
+
+            let index = activeNotes.indexOf(note)
+
+            if (index !== -1) {
+                activeNotes.splice(index, 1)
+            }
+
+            checkGameFinished()
+        }
+        function rankMessage(rank){
+            let hitSound = document.getElementById("hitSound")
+            let hitSoundP = document.getElementById("hitSound")
+            switch(rank) {
+                case 1:
+                    score += 100
+                    combo++
+                    console.log("perfect")
+                    $("#scoreInfo").text("Score: " + score)
+                    $("#rankInfo").text("Clean")
+                    hitSoundP.currentTime = 0
+                    hitSoundP.play()
+                    break
+                case 2:
+                    score += 50
+                    combo++
+                    console.log("good")
+                    $("#scoreInfo").text("Score: " + score)
+                    $("#rankInfo").text("Alright")
+                    hitSound.currentTime = 0
+                    hitSound.play()
+                    break
+                case 3:
+                    score += 25
+                    combo++
+                    console.log("bad")
+                    $("#scoreInfo").text("Score: " + score)
+                    $("#rankInfo").text("Sluggish")
+                    hitSound.currentTime = 0
+                    hitSound.play()
+                    break
+                default:
+                    combo = 0
+                    missCount++
+                    if(score != 0){
+                        score -= 10
+                        $("#scoreInfo").text("Score: " + score)
+                    }
+                    console.log("miss")
+                    $("#missInfo").text("Misses: " + missCount)
+                    $("#rankInfo").text("Miss")
+                    break
+                } 
+        }
+        function checkGameFinished() {
+            if (chartFinished && activeNotes.length === 0) {
+                console.log("Chart finished!")
+            }
+        }
+        window.onload = function(){
+            console.log("Retrieved:", localStorage.getItem("diff"))
+            console.log("Retrieved:", localStorage.getItem("song"))
+        }
     $(function(){
         notPaused = true
         rythm = 50
         combo
         missCount = 0
-        noteMove(lanes.L)
-        // noteMove(lanes.ML)
-        // noteMove(lanes.MR)
-        // noteMove(lanes.R)
-        loadChart();
+        loadChart()
+        
         $(document).on("keydown", function(event){
 
-            for (const lane of Object.values(lanes)) {
+            for (const [laneName, lane] of Object.entries(lanes)) {
 
                 if (event.key === lane.key && !lane.pressed) {
 
                     lane.pressed = true
 
 
-                    hitCheck(lane)
+                    hitCheck(laneName)
 
                     console.log(hitCheck(lane))
 
@@ -249,7 +278,7 @@ function noteMove(lane) {
         })
         $(document).on("keyup", function(event){
 
-            for (const lane of Object.values(lanes)) {
+             for (const [laneName, lane] of Object.entries(lanes)) {
 
                 if (event.key === lane.key) {
 
@@ -265,9 +294,6 @@ function noteMove(lane) {
             }
 
         })
-        // $(document).on("focusout" , function(){
-        //     notPaused = false
-        // })
         
     })
 </script>
@@ -347,16 +373,12 @@ function noteMove(lane) {
         <div id="noteArea" class="container col-6">
             <div class="row w-50 h-75">
                 <div id="spawnL" class="col-3 center">
-                    <div class="noteL"></div>
                 </div>
                 <div id="spawnML" class="col-3 center">
-                    <div class="noteML"></div>
                 </div>
                 <div id="spawnMR" class="col-3 center">
-                    <div class="noteMR"></div>
                 </div>
                 <div id="spawnR" class="col-3 center">
-                    <div class="noteR"></div>
                 </div>
             </div>
             <div class="row w-50 h-25">
