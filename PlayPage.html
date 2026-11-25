@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
     <title>RGwNN</title>
 </head>
 <body>
@@ -52,6 +55,43 @@
     let missCount
     let score = 0
     let notPaused
+    let chart;
+    let nextNote = 0;
+    let songStart;
+    let path = "songs/1/chartV.json"
+
+    async function loadChart() {
+        const response = await fetch("songs\\1\\chartV.json");
+        chart = await response.json();
+
+        songStart = performance.now();
+        requestAnimationFrame(chartUpdate);
+    }
+
+    function chartUpdate(timestamp) {
+            let elapsed = timestamp - songStart;
+
+            while (
+                nextNote < chart.notes.length &&
+                chart.notes[nextNote].time <= elapsed
+            ) {
+                spawnNote(chart.notes[nextNote].lane);
+                nextNote++;
+            }
+
+            requestAnimationFrame(chartUpdate);
+        }
+
+        function spawnNote(laneName) {
+        const note = document.createElement("div");
+
+        note.classList.add("note" + laneName);
+
+        document
+            .querySelector("#spawn" + laneName)
+            .appendChild(note);
+    }
+
     function hitCheck(lane){
             //58.9vh position where the note overlaps on the "perfect"
             if (!lane || !lane.note) return
@@ -127,34 +167,46 @@ function noteMove(lane) {
     requestAnimationFrame(moveNote)
 }
     function rankMessage(rank){
+        let hitSound = document.getElementById("hitSound");
+        let hitSoundP = document.getElementById("hitSound");
         switch(rank) {
             case 1:
                 score += 100
                 combo++
                 console.log("perfect")
-                $("#scoreInfo").text("score: " + score)
-                $("#rankInfo").text("perfect")
+                $("#scoreInfo").text("Score: " + score)
+                $("#rankInfo").text("Clean")
+                hitSoundP.currentTime = 0;
+                hitSoundP.play();
                 break
             case 2:
                 score += 50
                 combo++
                 console.log("good")
-                $("#scoreInfo").text("score: " + score)
-                $("#rankInfo").text("good")
+                $("#scoreInfo").text("Score: " + score)
+                $("#rankInfo").text("Alright")
+                hitSound.currentTime = 0;
+                hitSound.play();
                 break
             case 3:
                 score += 25
                 combo++
                 console.log("bad")
-                $("#scoreInfo").text("score: " + score)
-                $("#rankInfo").text("bad")
+                $("#scoreInfo").text("Score: " + score)
+                $("#rankInfo").text("Sluggish")
+                hitSound.currentTime = 0;
+                hitSound.play();
                 break
             default:
                 combo = 0
                 missCount++
+                if(score != 0){
+                    score -= 10
+                    $("#scoreInfo").text("Score: " + score)
+                }
                 console.log("miss")
-                $("#missInfo").text("misses: " + missCount)
-                $("#rankInfo").text("miss")
+                $("#missInfo").text("Misses: " + missCount)
+                $("#rankInfo").text("Miss")
                 break
             } 
     }
@@ -168,9 +220,10 @@ function noteMove(lane) {
         combo
         missCount = 0
         noteMove(lanes.L)
-        noteMove(lanes.ML)
-        noteMove(lanes.MR)
-        noteMove(lanes.R)
+        // noteMove(lanes.ML)
+        // noteMove(lanes.MR)
+        // noteMove(lanes.R)
+        loadChart();
         $(document).on("keydown", function(event){
 
             for (const lane of Object.values(lanes)) {
@@ -279,14 +332,19 @@ function noteMove(lane) {
         background-color: gray;
         height: 100%;
     }
+    .font{
+        font-family: 'Doto' ,sans-serif;
+        font-weight: 900;
+    }
 </style>
+<audio id="hitSound" src="assets/sounds/hit.mp3"></audio>
+<audio id="hitSoundP" src="assets/sounds/perfectHit.mp3"></audio>
 <div class="container-fluid main center">
     <div class="row w-50">
         <div class="container col-6" id="visualArea">
-                
             <div class="col-12 h-100 bg-primary">a</div>
         </div>
-        <div id="noteArea" class="container col-6 right">
+        <div id="noteArea" class="container col-6">
             <div class="row w-50 h-75">
                 <div id="spawnL" class="col-3 center">
                     <div class="noteL"></div>
@@ -304,30 +362,31 @@ function noteMove(lane) {
             <div class="row w-50 h-25">
                 <div class="col-3 center keyL">
                     <img id="keyL" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-                    <p id="keyLInfo">ㅤ</p>
+                    <p id="keyLInfo" class="font">D</p>
                 </div> 
                 <div id="b2" class="col-3 center keyML">
                     <img id="keyML" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-                    <p id="keyMLInfo">ㅤ</p>
+                    <p id="keyMLInfo" class="font" >F</p>
                 </div> 
                 <div id="b3" class="col-3 center keyMR">
                     <img id="keyMR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-                    <p id="keyMRInfo">ㅤ</p>
+                    <p id="keyMRInfo" class="font">J</p>
                 </div>
                 <div id="b4" class="col-3 center keyR">
                     <img id="keyR" src="assets\exported\KeyUnpressed.png" alt="unpressed key">
-                    <p id="keyRInfo">ㅤ</p>
+                    <p id="keyRInfo" class="font">K</p>
                 </div>
-                <div class="col-3 center">
-                    <p id="scoreInfo">score: ㅤ</p>
+                <div class="center">
+                    <div class="col-3 center">
+                        <p id="scoreInfo" class="font">Score: 0</p>
+                    </div>
+                    <div class="col-3 center">
+                        <p id="missInfo" class="font">Misses: 0</p>
+                    </div>
+                    <div class="col-3 center">
+                        <p id="rankInfo" class="font">ㅤ</p>
+                    </div>
                 </div>
-                <div class="col-3 center">
-                    <p id="missInfo">misses: ㅤ</p>
-                </div>
-                <div class="col-3 center">
-                    <p id="rankInfo">ㅤ</p>
-                </div>
-                
             </div>
         </div>
     </div>
