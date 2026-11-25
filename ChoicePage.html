@@ -4,51 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="assets\exported\favicon.png" />
     <title>RGwNN</title>
 </head>
 <script>
+    let SongInfo;
+    let songChoice = 1;
+    let diffChoice = 0;
+    async function loadSongInfo(id) {
+        let path = `songs/${id}/info.json`;
+
+        try {
+            const response = await fetch(path);
+
+            if (!response.ok) {
+                throw new Error("Couldn't load song information");
+            }
+
+            SongInfo = await response.json();
+
+            $("#song").val(SongInfo.name);
+
+            console.log(SongInfo);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     $(function(){
-        const Difficulty = ["Drums", "Guitar", "Bass", "Vocals"];
-        const song = ["Hadal Abyss Zone", "YARARARA", "Failure Girl (Inabakumori Remix)", "My Lovely Nook"];
+        const Difficulty = ["D", "G", "B", "V"];
         var choice = 0
         $("#Difficulty").attr("value", Difficulty[choice])
-        $("#previousDiff").click(function(){
-            if(choice > 0){
-                choice--
+        $("#previousDiff").click(function() {
+            if (diffChoice > 0) {
+                diffChoice--;
             }
-            $("#Difficulty").attr("value", Difficulty[choice])
-            console.log(choice)
-        })
-        $("#nextDiff").click(function(){  
-            if(choice < 3){
-                choice++
+
+            $("#Difficulty").val(Difficulty[diffChoice]);
+        });
+
+        $("#nextDiff").click(function() {
+            if (diffChoice < Difficulty.length - 1) {
+                diffChoice++;
             }
-            $("#Difficulty").attr("value", Difficulty[choice])
-            console.log(choice)
-        })
+
+            $("#Difficulty").val(Difficulty[diffChoice]);
+        });
         $("#song").attr("value", song[choice])
-        $("#previousSong").click(function(){
-            if(choice > 0){
-                choice--
+        $("#previousSong").click(function() {
+            if (songChoice > 1) {
+                songChoice--;
+                loadSongInfo(songChoice);
             }
-            $("#song").attr("value", song[choice])
-            console.log(choice)
-        })
-        $("#nextSong").click(function(){  
-            if(choice < 3){
-                choice++
-            }
-            $("#song").attr("value", song[choice])
-            console.log(choice)
-        })
+        });
+
+        $("#nextSong").click(function() {
+            songChoice++;
+            loadSongInfo(songChoice);
+        });
+
         $("form").submit(function(e){
             e.preventDefault()
         })
-        $("#Play").click(function(){
-            localStorage.setItem("diff", $("#Difficulty").val());
-            localStorage.setItem("song", $("#song").val());
-            console.log("Saved:", localStorage.getItem("diff"));
-            console.log("Saved:", localStorage.getItem("song"));
+        $("#Play").click(function() {
+            let selectedDifficulty = Difficulty[diffChoice];
+
+            localStorage.setItem("song", songChoice);
+            localStorage.setItem("diff", selectedDifficulty);
+
             location.href = "PlayPage.html";
         });
     })

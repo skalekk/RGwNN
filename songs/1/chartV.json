@@ -1,10 +1,8 @@
 {
-    "bpm": 120,
     "notes": [
-        { "time": 1000, "lane": "L" },
-        { "time": 1500, "lane": "ML" },
-        { "time": 2000, "lane": "MR" },
-        { "time": 2500, "lane": "R" },
-        { "time": 3000, "lane": "L" }
+        { "time": 2000, "lane": "L" },
+        { "time": 2500, "lane": "MR" },
+        { "time": 3000, "lane": "ML" },
+        { "time": 3500, "lane": "R" }
     ]
 }

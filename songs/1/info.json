@@ -3,5 +3,12 @@
     "SongName" : "My Lovely Nook",
     "Vocaloid" : "Otomachi Una",
     "MVArtist" : "AnythingBecomeMoe",
-    "BGArtist" : "AnythingBecomeMoe"
+    "BGArtist" : "AnythingBecomeMoe",
+    "Glow" : "#f9c500",
+    "difficulties": {
+        "Drums": "chartD.json",
+        "Guitar": "chartG.json",
+        "Bass": "chartB.json",
+        "Vocals": "chartV.json"
+    }
 }

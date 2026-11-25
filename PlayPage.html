@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets\exported\favicon.png" />
     <title>RGwNN</title>
 </head>
 <body>
@@ -61,9 +62,12 @@
     let path = "songs/1/chartV.json"
     let chartFinished = false
     let activeNotes = []
+    let song = localStorage.getItem("song");
+    let difficulty = localStorage.getItem("diff");
+    let chartPath = `songs/${song}/chart${difficulty}.json`;
 
         async function loadChart() {
-            const response = await fetch("songs\\1\\chartV.json")
+            const response = await fetch(chartPath)
             chart = await response.json()
 
             songStart = performance.now()

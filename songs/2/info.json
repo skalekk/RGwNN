@@ -1,0 +1,14 @@
+{
+    "Artist" : "Inabakumori",
+    "SongName" : "Hadal Abyss Zone",
+    "Vocaloid" : "Kaii Yuki",
+    "MVArtist" : "Lack of MV",
+    "BGArtist" : "nukunukunigirimeshi ",
+    "Glow" : "#ffffff",
+    "difficulties": {
+        "Drums": "chartD.json",
+        "Guitar": "chartG.json",
+        "Bass": "chartB.json",
+        "Vocals": "chartV.json"
+    }
+}
