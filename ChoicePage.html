@@ -13,10 +13,10 @@
     let songChoice = 1;
     let diffChoice = 0;
     async function loadSongInfo(id) {
-        let path = `songs/${id}/info.json`;
+        let pathInfo = `songs/${id}/info.json`;
 
         try {
-            const response = await fetch(path);
+            const response = await fetch(pathInfo);
 
             if (!response.ok) {
                 throw new Error("Couldn't load song information");
@@ -26,16 +26,16 @@
 
             $("#song").val(SongInfo.name);
 
-            const element = document.createElement("img");
-            let path = `songs/${id}/vinyl.png`
-            element.src = path
-                element.classList.add("vinyl")
-            if(id == 1){
-                document.querySelector("#active")
-            }else{
-                document.querySelector("#inactive")
-            }
-            document.appendChild(element)
+            // const element = document.createElement("img");
+            // let pathVinyl = `songs/${id}/vinyl.png`
+            // element.src = pathVinyl
+            //     element.classList.add("vinyl")
+            // if(id == 1){
+            //     document.querySelector("#active")
+            // }else{
+            //     document.querySelector("#inactive")
+            // }
+            // document.appendChild(element)
 
             console.log(SongInfo);
         } catch (error) {
