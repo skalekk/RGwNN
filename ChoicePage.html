@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" href="assets\exported\favicon.png" />
     <title>RGwNN</title>
 </head>
@@ -24,6 +25,17 @@
             SongInfo = await response.json();
 
             $("#song").val(SongInfo.name);
+
+            const element = document.createElement("img");
+            let path = `songs/${id}/vinyl.png`
+            element.src = path
+                element.classList.add("vinyl")
+            if(id == 1){
+                document.querySelector("#active")
+            }else{
+                document.querySelector("#inactive")
+            }
+            document.appendChild(element)
 
             console.log(SongInfo);
         } catch (error) {
@@ -77,11 +89,29 @@
     
 </script>
 <body>
-<div>
     <form id="DifficultyChoice">
         <button type="button" id="previousDiff">previous</button>
         <input type="text" id="Difficulty" disabled>
         <button type="button" id="nextDiff">next</button>
+        
+        <div id="songChoice" class="carousel slide">
+            <div class="carousel-inner">
+                <div id="active" class="carousel-item active">
+                </div>
+                <div id="inactive" class="carousel-item">
+                </div>
+                <div id="inactive" class="carousel-item">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
     </form>
     <form id="SongChoice">
         <button type="button" id="previousSong">previous</button>
@@ -92,5 +122,6 @@
     <button id="Play">Play</button>
     <button id="return" onclick="location.href='WIPPage.html'">Settings</button>
     <button id="return" onclick="location.href='index.html'">Back</button>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
 </body>
 </html>
