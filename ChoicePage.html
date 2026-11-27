@@ -14,10 +14,9 @@
     let diffChoice = 0;
     async function loadSongInfo(id) {
         let pathInfo = `songs/${id}/info.json`;
-
+        let pathVinyl = `songs/${id}/vinyl.gif`
         try {
             const response = await fetch(pathInfo);
-
             if (!response.ok) {
                 throw new Error("Couldn't load song information");
             }
@@ -25,7 +24,12 @@
             SongInfo = await response.json();
 
             $("#song").val(SongInfo.name);
-
+            
+            const element = $("<img></img>")
+            element
+                .src = pathVinyl
+                .alt = "vinyl.gif"
+            // $("#spawn" + laneName).append(element);
             // const element = document.createElement("img");
             // let pathVinyl = `songs/${id}/vinyl.png`
             // element.src = pathVinyl
@@ -39,7 +43,7 @@
 
             console.log(SongInfo);
         } catch (error) {
-            console.error(error);
+            console.error("failed to load the songs info or image");
         }
     }
     $(function(){
@@ -94,7 +98,7 @@
         <input type="text" id="Difficulty" disabled>
         <button type="button" id="nextDiff">next</button>
         
-        <div id="songChoice" class="carousel slide">
+        <!-- <div id="songChoice" class="carousel slide">
             <div class="carousel-inner">
                 <div id="active" class="carousel-item active">
                 </div>
@@ -111,7 +115,7 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-        </div>
+        </div> -->
     </form>
     <form id="SongChoice">
         <button type="button" id="previousSong">previous</button>
