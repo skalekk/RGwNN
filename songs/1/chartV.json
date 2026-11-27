@@ -1,8 +1,108 @@
 {
+    "length": "171000",
     "notes": [
-        { "time": 2000, "lane": "L" },
-        { "time": 2500, "lane": "MR" },
-        { "time": 3000, "lane": "ML" },
-        { "time": 3500, "lane": "R" }
+        { "time": 4100, "lane": "L", "comment" : "Who's dancing now"},
+        { "time": 4300, "lane": "MR" },
+        { "time": 4800, "lane": "R" },
+        { "time": 4950, "lane": "R" },
+        { "time": 5500, "lane": "L" },
+        { "time": 5500, "lane": "ML" },
+
+        { "time": 6000, "lane": "MR", "comment" : "Beneath the night, a fleeting freedom" },
+        { "time": 6100, "lane": "L" },
+        { "time": 6300, "lane": "R" },
+        { "time": 6400, "lane": "MR" },
+        { "time": 6500, "lane": "R" },
+        { "time": 7000, "lane": "ML" },
+        { "time": 7300, "lane": "ML" },
+        { "time": 7500, "lane": "MR" },
+
+        { "time": 8000, "lane": "R", "comment" : "Who's got nothing to do today"},
+        { "time": 8300, "lane": "ML" },
+        { "time": 8800, "lane": "L" },
+        { "time": 8950, "lane": "L" },
+        { "time": 9500, "lane": "R" },
+        { "time": 9500, "lane": "MR" },
+
+        { "time": 10200, "lane": "ML", "comment": "turning the street's and city into a stage" },
+        { "time": 10200, "lane": "L" },
+        
+        { "time": 10700, "lane": "R" },
+        { "time": 10700, "lane": "MR" },
+        
+        { "time": 10900, "lane": "R" },
+        { "time": 11000, "lane": "L" },
+        { "time": 11300, "lane": "L" },
+        { "time": 11900, "lane": "R" },
+
+        { "time": 28400, "lane": "MR", "comment" : "Yesterday's dark circles still under my eyes"},
+        { "time": 28600, "lane": "L" },
+        { "time": 28800, "lane": "R" },
+        
+        { "time": 29400, "lane": "ML" },
+        { "time": 29600, "lane": "R" },
+        { "time": 30000, "lane": "L" },
+
+        { "time": 30500, "lane": "MR" },
+        { "time": 30650, "lane": "R" },
+        { "time": 30800, "lane": "L" },
+        { "time": 31400, "lane": "MR" },
+        { "time": 31750, "lane": "R" },
+        { "time": 31850, "lane": "ML" },
+        
+        { "time": 32000, "lane": "L", "comment" : "The work just keeps piling up"},
+        { "time": 32200, "lane": "MR" },
+        
+        { "time": 32700, "lane": "R" },
+        { "time": 32900, "lane": "L" },
+        
+        { "time": 33600, "lane": "MR" },
+        { "time": 33700, "lane": "R" },
+        { "time": 33800, "lane": "L" },
+
+        { "time": 34600, "lane": "L" },
+        { "time": 34700, "lane": "ML" },
+        { "time": 34800, "lane": "MR" },
+
+        { "time": 35600, "lane": "L" },
+        { "time": 35700, "lane": "ML" },
+
+        { "time": 36500, "lane": "L", "comment" : "Sunk in exaustiion, frozen stiff"},
+        { "time": 36600, "lane": "ML" },
+
+        { "time": 37400, "lane": "MR" },
+        { "time": 37500, "lane": "R" },
+
+        { "time": 38500, "lane": "L" },
+        { "time": 38700, "lane": "ML" },
+        { "time": 38900, "lane": "MR" },
+        { "time": 39200, "lane": "ML" },
+        { "time": 39400, "lane": "L" },
+        { "time": 39850, "lane": "MR" },
+
+        { "time": 40000, "lane": "L", "comment" : "Starting up with no time to get ready"},
+        { "time": 40200, "lane": "ML" },
+        { "time": 40400, "lane": "L" },
+
+        { "time": 40700, "lane": "R" },
+        { "time": 40800, "lane": "MR" },
+
+        { "time": 41800, "lane": "MR" },
+        { "time": 41900, "lane": "ML" },
+
+        { "time": 42800, "lane": "ML" },
+        { "time": 42950, "lane": "MR" },
+
+        { "time": 44100, "lane": "L", "comment" : "Back and forth"},
+        { "time": 44100, "lane": "ML" },
+        { "time": 44300, "lane": "MR" },
+
+        { "time": 45100, "lane": "MR" },
+        { "time": 45100, "lane": "R" },
+        { "time": 45300, "lane": "ML" },
+
+        { "time": 46300, "lane": "MR", "comment": "No time to breathe"},
+        { "time": 46800, "lane": "ML" },
+        { "time": 47000, "lane": "L" }
     ]
 }
